@@ -1,0 +1,6 @@
+{
+  "quota_offset": 0.0,
+  "remainder_weight": 1.0,
+  "threshold": 5.0,
+  "favor_small_parties": true
+}

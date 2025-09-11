@@ -1,0 +1,3 @@
+[tools]
+duckdb = "latest"
+jiq = "latest"

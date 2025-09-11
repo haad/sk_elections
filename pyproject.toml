@@ -1,0 +1,24 @@
+[project]
+name = "heykell"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "altair>=5.5.0",
+    "boto3>=1.40.16",
+    "ipython>=9.4.0",
+    "marimo[sql]>=0.15.0",
+    "matplotlib>=3.10.5",
+    "openai>=1.101.0",
+    "pandas>=2.3.2",
+    "plotly>=6.3.0",
+    "pyodide-http>=0.2.2",
+    "pyodide-py>=0.28.2",
+    "python-lsp-server>=1.13.0",
+    "scikit-learn>=1.7.1",
+    "scipy>=1.16.1",
+    "seaborn>=0.13.2",
+    "vega-datasets>=0.9.0",
+    "vegafusion>=2.0.2",
+]
