@@ -39,7 +39,7 @@ self_learning_model_cli_with_optimizer.py
 ### 1. 📊 Train the model on real-world polls
 
 ```bash
-python self_learning_model_cli_with_optimizer.py training
+python sk_election_model.py training
 ```
 
 - Trains the model using all polls in the `data/` folder.
@@ -70,7 +70,7 @@ Prepare a JSON file like `data/input.json`:
 Then run:
 
 ```bash
-python self_learning_model_cli_with_optimizer.py simulation --weights data/weights.json --input data/input.json
+python sk_election_model.py simulation --weights data/weights.json --input data/input.json
 ```
 
 The output will show:

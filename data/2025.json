@@ -1,4 +1,34 @@
 {
+    "09":
+    {
+        "ipsos":
+        {
+            "vysledky":
+            {
+                "PS": 22.8,
+                "SMER": 18.4,
+                "REP": 10.9,
+                "HLAS": 8.3,
+                "SLOV": 7.3,
+                "SAS": 7.7,
+                "KDH": 6.8,
+                "DEM": 4.4,
+                "Aliancia": 3.5,
+                "SNS": 3.5,
+                "ROD": 3.5
+            },
+            "mandaty":
+            {
+                "PS": 42,
+                "SMER": 34,
+                "REP": 20,
+                "HLAS": 15,
+                "SLOV": 13,
+                "SAS": 14,
+                "KDH": 12
+            }
+        }
+    }
     "08":
     {
         "ipsos":
