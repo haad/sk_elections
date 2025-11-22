@@ -1,4 +1,172 @@
 {
+    "11": {
+        "nms":
+        {
+            "vysledky":
+            {
+                "PS": 23.1,
+                "SMER": 16.3,
+                "REP": 12.1,
+                "HLAS": 7.5,
+                "SLOV": 8.3,
+                "SAS": 6.3,
+                "KDH": 5.4,
+                "DEM": 5.3,
+                "Aliancia": 4.4,
+                "ROD": 3.2
+            },
+            "mandaty":
+            {
+                "PS": 41,
+                "SMER": 29,
+                "REP": 22,
+                "HLAS": 13,
+                "SLOV": 15,
+                "SAS": 11,
+                "KDH": 10,
+                "DEM": 9
+            }
+        },
+        "ako":
+        {
+            "vysledky":
+            {
+                "PS": 23.3,
+                "SMER": 17.1,
+                "REP": 6.9,
+                "HLAS": 10.4,
+                "SLOV": 8.2,
+                "SAS": 7.5,
+                "KDH": 6.5,
+                "DEM": 5.3,
+                "SNS": 4.6
+            },
+            "mandaty":
+            {
+                "PS": 41,
+                "SMER": 30,
+                "REP": 12,
+                "HLAS": 18,
+                "SLOV": 15,
+                "SAS": 13,
+                "KDH": 12,
+                "DEM": 9
+            }
+        },
+        "focus":
+        {
+            "vysledky":
+            {
+                "PS": 22.1,
+                "SMER": 16.5,
+                "REP": 10,
+                "HLAS": 9.1,
+                "SLOV": 8.9,
+                "SAS": 6.5,
+                "KDH": 6.3,
+                "DEM": 5.2,
+                "SNS": 4.2,
+                "Aliancia": 4.6,
+                "ROD": 2.1,
+                "PRAV": 2
+            },
+            "mandaty":
+            {
+                "PS": 39,
+                "SMER": 29,
+                "REP": 18,
+                "HLAS": 16,
+                "SLOV": 16,
+                "SAS": 12,
+                "KDH": 11,
+                "DEM": 9
+            }
+        },
+    },
+    "10": {
+        "nms":
+        {
+            "vysledky":
+            {
+                "PS": 24.8,
+                "SMER": 17.9,
+                "REP": 11.8,
+                "HLAS": 8.3,
+                "SLOV": 6.4,
+                "SAS": 5.9,
+                "KDH": 5.4,
+                "DEM": 5.2,
+                "Aliancia": 4.4,
+                "ROD": 3.2
+            },
+            "mandaty":
+            {
+                "PS": 44,
+                "SMER": 31,
+                "REP": 21,
+                "HLAS": 15,
+                "SLOV": 11,
+                "SAS": 10,
+                "KDH": 9,
+                "DEM": 9
+            }
+        },
+        "focus":
+        {
+            "vysledky":
+            {
+                "PS": 23.1,
+                "SMER": 17.0,
+                "REP": 9.8,
+                "HLAS": 9.4,
+                "SLOV": 8.3,
+                "SAS": 6.3,
+                "KDH": 6.7,
+                "DEM": 5.2,
+                "Aliancia": 4.3,
+                "SNS": 4.0
+            },
+            "mandaty":
+            {
+                "PS": 40,
+                "SMER": 30,
+                "REP": 17,
+                "HLAS": 16,
+                "SLOV": 15,
+                "SAS": 12,
+                "KDH": 11,
+                "DEM": 9
+            }
+        },
+        "ako":
+        {
+            "vysledky":
+            {
+                "PS": 22.8,
+                "SMER": 17.9,
+                "REP": 8.6,
+                "HLAS": 10.8,
+                "SLOV": 7.5,
+                "SAS": 7.1,
+                "KDH": 6.8,
+                "DEM": 5.1,
+                "Aliancia": 3.8,
+                "SNS": 4.5
+            },
+            "mandaty":
+            {
+                "PS": 40,
+                "SMER": 31,
+                "REP": 15,
+                "HLAS": 18,
+                "SLOV": 13,
+                "SAS": 12,
+                "KDH": 12,
+                "DEM": 9
+            }
+        }
+    },
+
     "09":
     {
         "ipsos":
