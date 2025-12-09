@@ -1,0 +1,71 @@
+{
+  "scenarios": [
+    {
+      "name": "HLAS below threshold",
+      "description": "What if HLAS falls below the 5% threshold?",
+      "modifications": {
+        "HLAS": 4.5
+      }
+    },
+    {
+      "name": "SNS enters parliament",
+      "description": "What if SNS rises above the 5% threshold?",
+      "modifications": {
+        "SNS": 5.5
+      }
+    },
+    {
+      "name": "HLAS voters to SMER",
+      "description": "3% of HLAS voters switch to SMER",
+      "modifications": {
+        "from": "HLAS",
+        "to": "SMER",
+        "amount": 3
+      }
+    },
+    {
+      "name": "REP surge",
+      "description": "Republika gains 3 percentage points",
+      "modifications": {
+        "REP": "+3"
+      }
+    },
+    {
+      "name": "PS-DEM coalition",
+      "description": "PS and Democrats run on a combined list",
+      "modifications": {
+        "PS": "+5.5",
+        "DEM": 0
+      }
+    },
+    {
+      "name": "Government collapse",
+      "description": "SMER drops 5%, split between PS and REP",
+      "modifications": {
+        "SMER": "-5",
+        "PS": "+2.5",
+        "REP": "+2.5"
+      }
+    },
+    {
+      "name": "Opposition unity",
+      "description": "PS, SAS, DEM, KDH form unified opposition bloc (simplified as PS gaining their support)",
+      "modifications": {
+        "PS": 40,
+        "SAS": 0,
+        "DEM": 0,
+        "KDH": 0
+      }
+    },
+    {
+      "name": "KDH and Hlas out",
+      "description": "KDH and HLAS out of parlament",
+      "modifications": {
+        "HLAS": 4.8,
+        "KDH": 4.9,
+        "DEM": "+1.5",
+        "SLOV": "+2"
+      }
+    }
+  ]
+}

@@ -119,8 +119,51 @@ python trend_analysis.py --full-stats --graph
 | `--correlations` | Show party correlation analysis |
 | `--volatility` | Show polling volatility metrics |
 | `--monte-carlo` | Run Monte Carlo seat simulation |
-| `--scenarios` | Run scenario (what-if) analysis |
+| `--scenarios` | Run default scenario (what-if) analysis |
+| `--scenario-file FILE` | Load custom scenarios from JSON file |
+| `--scenario-name NAME` | Run specific scenario by name (can repeat) |
 | `--full-stats` | Run all statistical analyses |
+
+#### Custom Scenarios
+
+Create a JSON file with custom what-if scenarios:
+
+```json
+{
+  "scenarios": [
+    {
+      "name": "HLAS below threshold",
+      "description": "What if HLAS falls below 5%?",
+      "modifications": {"HLAS": 4.5}
+    },
+    {
+      "name": "Voter transfer",
+      "description": "3% moves from HLAS to SMER",
+      "modifications": {"from": "HLAS", "to": "SMER", "amount": 3}
+    },
+    {
+      "name": "REP surge",
+      "description": "Republika gains 3 points",
+      "modifications": {"REP": "+3"}
+    }
+  ]
+}
+```
+
+Modification formats:
+- **Absolute**: `{"HLAS": 4.5}` - set to exact percentage
+- **Relative**: `{"REP": "+3"}` or `{"SMER": "-2"}` - adjust by delta
+- **Transfer**: `{"from": "HLAS", "to": "SMER", "amount": 3}` - move voters between parties
+
+Run custom scenarios:
+
+```bash
+# Run all scenarios from file
+python trend_analysis.py --scenario-file data/scenarios.json
+
+# Run specific scenario by name
+python trend_analysis.py --scenario-file data/scenarios.json --scenario-name "HLAS below threshold"
+```
 
 ---
 

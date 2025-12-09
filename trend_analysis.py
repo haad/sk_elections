@@ -724,44 +724,175 @@ def run_scenario(records: List[Dict], params, scenario_name: str,
     summarize_blocks(seats)
 
 
-def print_scenarios(records: List[Dict], params, threshold: float = 5.0):
-    """Run and print common scenario analyses."""
-    print("\n" + "=" * 70)
-    print("SCENARIO ANALYSIS")
-    print("=" * 70)
-
-    # Get current estimates
+def get_current_estimates(records: List[Dict]) -> Dict[str, float]:
+    """Get current Kalman estimates for all parties."""
     current = {}
     for party in set(r['party'] for r in records):
         kf, results = run_kalman_filter(records, party)
         if kf and results:
             support, _, _ = kf.get_state()
             current[party] = support
+    return current
 
-    # Scenario 1: HLAS drops below 5%
-    run_scenario(records, params, "HLAS drops below 5%",
-                 {"HLAS": 4.5}, threshold)
 
-    # Scenario 2: SNS rises above 5%
-    run_scenario(records, params, "SNS rises above 5%",
-                 {"SNS": 5.5}, threshold)
+def parse_scenario_modifications(modifications: Dict[str, any], current: Dict[str, float]) -> Dict[str, float]:
+    """
+    Parse scenario modifications, supporting both absolute values and relative changes.
 
-    # Scenario 3: HLAS collapses, voters go to SMER
-    hlas_current = current.get("HLAS", 8)
-    smer_current = current.get("SMER", 17)
-    run_scenario(records, params, "HLAS collapse → SMER",
-                 {"HLAS": 3.0, "SMER": smer_current + (hlas_current - 3.0)}, threshold)
+    Supported formats:
+    - Absolute: {"HLAS": 4.5} - set HLAS to 4.5%
+    - Relative: {"HLAS": "-3"} or {"HLAS": "+2"} - adjust by delta
+    - Transfer: {"from": "HLAS", "to": "SMER", "amount": 3} - move 3% from HLAS to SMER
+    """
+    result = {}
 
-    # Scenario 4: REP continues rising
-    rep_current = current.get("REP", 10)
-    run_scenario(records, params, "REP surge (+3%)",
-                 {"REP": rep_current + 3.0}, threshold)
+    for party, value in modifications.items():
+        if party in ["from", "to", "amount"]:
+            continue  # Handle transfer syntax separately
 
-    # Scenario 5: PS + DEM merger (combined support)
-    ps_current = current.get("PS", 23)
-    dem_current = current.get("DEM", 5.5)
-    run_scenario(records, params, "PS + DEM combined list",
-                 {"PS": ps_current + dem_current, "DEM": 0}, threshold)
+        if isinstance(value, str):
+            # Relative change
+            if value.startswith('+') or value.startswith('-'):
+                delta = float(value)
+                result[party] = current.get(party, 0) + delta
+            else:
+                result[party] = float(value)
+        else:
+            result[party] = float(value)
+
+    # Handle transfer syntax
+    if "from" in modifications and "to" in modifications and "amount" in modifications:
+        from_party = modifications["from"]
+        to_party = modifications["to"]
+        amount = float(modifications["amount"])
+
+        from_current = current.get(from_party, 0)
+        to_current = current.get(to_party, 0)
+
+        result[from_party] = from_current - amount
+        result[to_party] = to_current + amount
+
+    return result
+
+
+def load_scenarios_from_file(filepath: str) -> List[Dict]:
+    """
+    Load custom scenarios from a JSON file.
+
+    Expected format:
+    {
+        "scenarios": [
+            {
+                "name": "HLAS drops below 5%",
+                "description": "What if HLAS falls below the threshold?",
+                "modifications": {"HLAS": 4.5}
+            },
+            {
+                "name": "Voter transfer",
+                "description": "HLAS voters move to SMER",
+                "modifications": {"from": "HLAS", "to": "SMER", "amount": 3}
+            }
+        ]
+    }
+    """
+    with open(filepath, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    return data.get("scenarios", [])
+
+
+def run_custom_scenario(records: List[Dict], params, scenario: Dict,
+                        current: Dict[str, float], threshold: float = 5.0):
+    """Run a single custom scenario."""
+    from sk_election_model import calculate_mandates, summarize_blocks
+
+    name = scenario.get("name", "Unnamed scenario")
+    description = scenario.get("description", "")
+    modifications_raw = scenario.get("modifications", {})
+
+    # Parse modifications (handle relative values and transfers)
+    modifications = parse_scenario_modifications(modifications_raw, current)
+
+    # Apply modifications to current state
+    scenario_state = current.copy()
+    for party, value in modifications.items():
+        scenario_state[party] = max(0, value)  # Ensure no negative percentages
+
+    # Calculate seats
+    seats = calculate_mandates(scenario_state, params)
+    original_seats = calculate_mandates(current, params)
+
+    print(f"\n--- Scenario: {name} ---")
+    if description:
+        print(f"    {description}")
+
+    print("\nModified polls:")
+    for party, value in modifications.items():
+        original = current.get(party, 0)
+        diff = value - original
+        print(f"  {party}: {original:.1f}% → {value:.1f}% ({diff:+.1f}%)")
+
+    print("\nResulting seats:")
+    for party, s in sorted(seats.items(), key=lambda x: x[1], reverse=True):
+        if s > 0 or original_seats.get(party, 0) > 0:
+            orig_s = original_seats.get(party, 0)
+            diff = s - orig_s
+            diff_str = f"({diff:+d})" if diff != 0 else ""
+            print(f"  {party}: {s} {diff_str}")
+
+    summarize_blocks(seats)
+
+
+def print_scenarios(records: List[Dict], params, threshold: float = 5.0,
+                    scenario_file: str = None, scenario_names: List[str] = None):
+    """Run and print scenario analyses."""
+    print("\n" + "=" * 70)
+    print("SCENARIO ANALYSIS")
+    print("=" * 70)
+
+    # Get current estimates
+    current = get_current_estimates(records)
+
+    if scenario_file:
+        # Load and run custom scenarios from file
+        scenarios = load_scenarios_from_file(scenario_file)
+
+        if scenario_names:
+            # Filter to only requested scenarios
+            scenarios = [s for s in scenarios if s.get("name") in scenario_names]
+
+        if not scenarios:
+            print("\nNo matching scenarios found.")
+            return
+
+        for scenario in scenarios:
+            run_custom_scenario(records, params, scenario, current, threshold)
+    else:
+        # Run default built-in scenarios
+        # Scenario 1: HLAS drops below 5%
+        run_scenario(records, params, "HLAS drops below 5%",
+                     {"HLAS": 4.5}, threshold)
+
+        # Scenario 2: SNS rises above 5%
+        run_scenario(records, params, "SNS rises above 5%",
+                     {"SNS": 5.5}, threshold)
+
+        # Scenario 3: HLAS collapses, voters go to SMER
+        hlas_current = current.get("HLAS", 8)
+        smer_current = current.get("SMER", 17)
+        run_scenario(records, params, "HLAS collapse → SMER",
+                     {"HLAS": 3.0, "SMER": smer_current + (hlas_current - 3.0)}, threshold)
+
+        # Scenario 4: REP continues rising
+        rep_current = current.get("REP", 10)
+        run_scenario(records, params, "REP surge (+3%)",
+                     {"REP": rep_current + 3.0}, threshold)
+
+        # Scenario 5: PS + DEM merger (combined support)
+        ps_current = current.get("PS", 23)
+        dem_current = current.get("DEM", 5.5)
+        run_scenario(records, params, "PS + DEM combined list",
+                     {"PS": ps_current + dem_current, "DEM": 0}, threshold)
 
 
 def load_all_polls(folder_path: str = "data") -> Dict:
@@ -1595,6 +1726,10 @@ def main():
                         help="Number of Monte Carlo simulations (default: 10000)")
     parser.add_argument("--scenarios", action="store_true",
                         help="Run scenario analysis (what-if)")
+    parser.add_argument("--scenario-file", type=str, default=None,
+                        help="Path to custom scenarios JSON file")
+    parser.add_argument("--scenario-name", type=str, action="append", dest="scenario_names",
+                        help="Run specific scenario by name (can be used multiple times)")
     parser.add_argument("--full-stats", action="store_true",
                         help="Run all statistical analyses")
     parser.add_argument("--graph", action="store_true",
@@ -1667,7 +1802,7 @@ def main():
             params = ModelParams()
         print_monte_carlo(records, params, args.simulations, args.threshold)
 
-    if args.scenarios or args.full_stats:
+    if args.scenarios or args.full_stats or args.scenario_file:
         # Load model parameters
         import json
         try:
@@ -1677,7 +1812,9 @@ def main():
         except FileNotFoundError:
             from sk_election_model import ModelParams
             params = ModelParams()
-        print_scenarios(records, params, args.threshold)
+        print_scenarios(records, params, args.threshold,
+                        scenario_file=args.scenario_file,
+                        scenario_names=args.scenario_names)
 
 
 if __name__ == "__main__":
