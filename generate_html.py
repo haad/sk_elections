@@ -1366,7 +1366,9 @@ def generate_html_template(data: Dict) -> str:
 
             document.getElementById('forecastSelect').addEventListener('change', (e) => {
                 currentForecast = parseInt(e.target.value);
-                // Note: Forecast data is pre-generated, this just filters display
+                renderTrendsChart();
+                renderBlocksChart();
+                renderSeatsChart();
             });
 
             document.getElementById('kalmanToggle').addEventListener('change', (e) => {
@@ -1399,15 +1401,15 @@ def generate_html_template(data: Dict) -> str:
             const datasets = [];
 
             parties.forEach(([party, data]) => {
-                // Main line
+                // Main line - smooth for Kalman, straight for raw
                 datasets.push({
                     label: party,
                     data: data.dates.map((d, i) => ({ x: d, y: data.values[i] })),
                     borderColor: data.color,
                     backgroundColor: data.color + '20',
                     borderWidth: highlightedParty === party ? 4 : 2,
-                    pointRadius: highlightedParty === party ? 4 : 2,
-                    tension: 0.3,
+                    pointRadius: highlightedParty === party ? 4 : (useKalman ? 2 : 3),
+                    tension: useKalman ? 0.3 : 0,  // Smooth curve for Kalman, straight lines for raw
                     fill: false,
                     hidden: highlightedParty && highlightedParty !== party,
                 });
@@ -1417,20 +1419,26 @@ def generate_html_template(data: Dict) -> str:
                     const lastDate = data.dates[data.dates.length - 1];
                     const lastValue = data.values[data.values.length - 1];
 
-                    datasets.push({
-                        label: party + ' (forecast)',
-                        data: [
-                            { x: lastDate, y: lastValue },
-                            ...data.forecast.dates.map((d, i) => ({ x: d, y: data.forecast.values[i] }))
-                        ],
-                        borderColor: data.color,
-                        borderWidth: 2,
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        tension: 0.3,
-                        fill: false,
-                        hidden: highlightedParty && highlightedParty !== party,
-                    });
+                    // Filter forecast by selected months
+                    const forecastDates = data.forecast.dates.slice(0, currentForecast);
+                    const forecastValues = data.forecast.values.slice(0, currentForecast);
+
+                    if (forecastDates.length > 0) {
+                        datasets.push({
+                            label: party + ' (forecast)',
+                            data: [
+                                { x: lastDate, y: lastValue },
+                                ...forecastDates.map((d, i) => ({ x: d, y: forecastValues[i] }))
+                            ],
+                            borderColor: data.color,
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            tension: 0.3,
+                            fill: false,
+                            hidden: highlightedParty && highlightedParty !== party,
+                        });
+                    }
                 }
             });
 
@@ -1534,22 +1542,41 @@ def generate_html_template(data: Dict) -> str:
             const ctx = document.getElementById('blocksChart').getContext('2d');
             const blocks = DATA.blocks;
 
+            // Filter forecast by selected months
+            const govForecastDates = blocks.government.forecast.dates.slice(0, currentForecast);
+            const govForecastValues = blocks.government.forecast.values.slice(0, currentForecast);
+            const oppForecastDates = blocks.opposition.forecast.dates.slice(0, currentForecast);
+            const oppForecastValues = blocks.opposition.forecast.values.slice(0, currentForecast);
+
             const datasets = [
                 {
-                    label: 'Government',
+                    label: t('government'),
                     data: blocks.government.dates.map((d, i) => ({ x: d, y: blocks.government.values[i] })),
                     borderColor: 'var(--gov-color)',
                     backgroundColor: 'rgba(231, 76, 60, 0.1)',
                     borderWidth: 3,
                     fill: true,
-                    tension: 0.3,
+                    tension: useKalman ? 0.3 : 0,
                 },
                 {
-                    label: 'Government (forecast)',
+                    label: t('opposition'),
+                    data: blocks.opposition.dates.map((d, i) => ({ x: d, y: blocks.opposition.values[i] })),
+                    borderColor: 'var(--opp-color)',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: useKalman ? 0.3 : 0,
+                }
+            ];
+
+            // Add forecast lines only when Kalman is enabled
+            if (useKalman && govForecastDates.length > 0) {
+                datasets.push({
+                    label: t('government') + ' (forecast)',
                     data: [
                         { x: blocks.government.dates[blocks.government.dates.length - 1],
                           y: blocks.government.values[blocks.government.values.length - 1] },
-                        ...blocks.government.forecast.dates.map((d, i) => ({ x: d, y: blocks.government.forecast.values[i] }))
+                        ...govForecastDates.map((d, i) => ({ x: d, y: govForecastValues[i] }))
                     ],
                     borderColor: 'var(--gov-color)',
                     borderWidth: 2,
@@ -1557,22 +1584,13 @@ def generate_html_template(data: Dict) -> str:
                     pointRadius: 0,
                     fill: false,
                     tension: 0.3,
-                },
-                {
-                    label: 'Opposition',
-                    data: blocks.opposition.dates.map((d, i) => ({ x: d, y: blocks.opposition.values[i] })),
-                    borderColor: 'var(--opp-color)',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.3,
-                },
-                {
-                    label: 'Opposition (forecast)',
+                });
+                datasets.push({
+                    label: t('opposition') + ' (forecast)',
                     data: [
                         { x: blocks.opposition.dates[blocks.opposition.dates.length - 1],
                           y: blocks.opposition.values[blocks.opposition.values.length - 1] },
-                        ...blocks.opposition.forecast.dates.map((d, i) => ({ x: d, y: blocks.opposition.forecast.values[i] }))
+                        ...oppForecastDates.map((d, i) => ({ x: d, y: oppForecastValues[i] }))
                     ],
                     borderColor: 'var(--opp-color)',
                     borderWidth: 2,
@@ -1580,8 +1598,8 @@ def generate_html_template(data: Dict) -> str:
                     pointRadius: 0,
                     fill: false,
                     tension: 0.3,
-                }
-            ];
+                });
+            }
 
             if (blocksChart) blocksChart.destroy();
 
@@ -1623,28 +1641,66 @@ def generate_html_template(data: Dict) -> str:
             const ctx = document.getElementById('seatsChart').getContext('2d');
             const seats = DATA.seats;
 
+            // Filter forecast by selected months
+            const govForecastDates = seats.government.forecast.dates.slice(0, currentForecast);
+            const govForecastValues = seats.government.forecast.values.slice(0, currentForecast);
+            const oppForecastDates = seats.opposition.forecast.dates.slice(0, currentForecast);
+            const oppForecastValues = seats.opposition.forecast.values.slice(0, currentForecast);
+
             const datasets = [
                 {
-                    label: 'Government',
+                    label: t('government'),
                     data: seats.government.dates.map((d, i) => ({ x: d, y: seats.government.values[i] })),
                     borderColor: 'var(--gov-color)',
                     backgroundColor: 'rgba(231, 76, 60, 0.3)',
                     borderWidth: 3,
                     pointRadius: 4,
                     fill: true,
-                    tension: 0.3,
+                    tension: useKalman ? 0.3 : 0,
                 },
                 {
-                    label: 'Opposition',
+                    label: t('opposition'),
                     data: seats.opposition.dates.map((d, i) => ({ x: d, y: seats.opposition.values[i] })),
                     borderColor: 'var(--opp-color)',
                     backgroundColor: 'rgba(52, 152, 219, 0.3)',
                     borderWidth: 3,
                     pointRadius: 4,
                     fill: true,
-                    tension: 0.3,
+                    tension: useKalman ? 0.3 : 0,
                 }
             ];
+
+            // Add forecast lines only when Kalman is enabled
+            if (useKalman && govForecastDates.length > 0) {
+                datasets.push({
+                    label: t('government') + ' (forecast)',
+                    data: [
+                        { x: seats.government.dates[seats.government.dates.length - 1],
+                          y: seats.government.values[seats.government.values.length - 1] },
+                        ...govForecastDates.map((d, i) => ({ x: d, y: govForecastValues[i] }))
+                    ],
+                    borderColor: 'var(--gov-color)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0.3,
+                });
+                datasets.push({
+                    label: t('opposition') + ' (forecast)',
+                    data: [
+                        { x: seats.opposition.dates[seats.opposition.dates.length - 1],
+                          y: seats.opposition.values[seats.opposition.values.length - 1] },
+                        ...oppForecastDates.map((d, i) => ({ x: d, y: oppForecastValues[i] }))
+                    ],
+                    borderColor: 'var(--opp-color)',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0.3,
+                });
+            }
 
             if (seatsChart) seatsChart.destroy();
 
