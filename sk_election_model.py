@@ -160,8 +160,18 @@ def main():
             params = ModelParams.from_dict(json.load(f))
         with open(args.input, "r", encoding="utf-8") as f:
             percent_data = json.load(f)
+
+        print("Input (party percentages):")
+        for party, percent in sorted(percent_data.items(), key=lambda x: x[1], reverse=True):
+            print(f"  {party}: {percent}%")
+
         mandates = calculate_mandates(percent_data, params)
-        print(json.dumps(mandates, ensure_ascii=False, indent=2))
+
+        print("\nCalculated possible seats:")
+        for party, seats in sorted(mandates.items(), key=lambda x: x[1], reverse=True):
+            print(f"  {party}: {seats}")
+        print(f"  Total: {sum(mandates.values())}")
+
         summarize_blocks(mandates)
 
 if __name__ == "__main__":
