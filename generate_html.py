@@ -530,10 +530,12 @@ def generate_html(output_dir: str, threshold: float = 5.0, forecast_months: int 
     date_end = max(all_dates).strftime("%B %Y")
 
     print("Generating chart data...")
-    parties_data = get_chart_data(records, threshold, forecast_months)
-    raw_parties_data = get_raw_chart_data(records, threshold, forecast_months)
-    blocks_data = get_blocks_data(records, forecast_months)
-    seats_data = get_seats_data(polls, records, forecast_months)
+    # Always generate 12 months forecast so user can select different lengths
+    max_forecast = 12
+    parties_data = get_chart_data(records, threshold, max_forecast)
+    raw_parties_data = get_raw_chart_data(records, threshold, max_forecast)
+    blocks_data = get_blocks_data(records, max_forecast)
+    seats_data = get_seats_data(polls, records, max_forecast)
 
     print("Calculating statistics...")
     correlation_data = get_correlation_data(records, threshold)
@@ -1376,6 +1378,8 @@ def generate_html_template(data: Dict) -> str:
                 localStorage.setItem('sk-polls-kalman', useKalman);
                 document.querySelector('#trends .card-header .badge').textContent = useKalman ? t('kalmanFiltered') : t('rawData');
                 renderTrendsChart();
+                renderBlocksChart();
+                renderSeatsChart();
             });
 
             // Render everything
@@ -1401,6 +1405,30 @@ def generate_html_template(data: Dict) -> str:
             const datasets = [];
 
             parties.forEach(([party, data]) => {
+                // Confidence band (only for Kalman mode when party is highlighted or no highlight)
+                if (useKalman && data.uncertainties && (!highlightedParty || highlightedParty === party)) {
+                    // Upper bound
+                    datasets.push({
+                        label: party + ' (upper)',
+                        data: data.dates.map((d, i) => ({ x: d, y: data.values[i] + 1.96 * data.uncertainties[i] })),
+                        borderColor: 'transparent',
+                        backgroundColor: 'transparent',
+                        pointRadius: 0,
+                        fill: false,
+                        tension: 0.3,
+                    });
+                    // Lower bound with fill to upper
+                    datasets.push({
+                        label: party + ' (lower)',
+                        data: data.dates.map((d, i) => ({ x: d, y: data.values[i] - 1.96 * data.uncertainties[i] })),
+                        borderColor: 'transparent',
+                        backgroundColor: data.color + '15',
+                        pointRadius: 0,
+                        fill: '-1',  // Fill to previous dataset
+                        tension: 0.3,
+                    });
+                }
+
                 // Main line - smooth for Kalman, straight for raw
                 datasets.push({
                     label: party,
@@ -1408,7 +1436,7 @@ def generate_html_template(data: Dict) -> str:
                     borderColor: data.color,
                     backgroundColor: data.color + '20',
                     borderWidth: highlightedParty === party ? 4 : 2,
-                    pointRadius: highlightedParty === party ? 4 : (useKalman ? 2 : 3),
+                    pointRadius: highlightedParty === party ? 4 : (useKalman ? 2 : 4),
                     tension: useKalman ? 0.3 : 0,  // Smooth curve for Kalman, straight lines for raw
                     fill: false,
                     hidden: highlightedParty && highlightedParty !== party,
