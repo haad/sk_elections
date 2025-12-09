@@ -1,0 +1,80 @@
+{
+  "12": {
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 0.8,
+        "SMER": 24.1,
+        "PS": 19.4,
+        "HLAS": 15.7,
+        "REP": 0.5,
+        "KDH": 6.4,
+        "DEM": 4.7
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 0.2,
+        "SMER": 24.2,
+        "PS": 21.4,
+        "HLAS": 14.6,
+        "REP": 2.3,
+        "KDH": 7.3,
+        "DEM": 2.8
+      },
+      "mandaty": null
+    }
+  },
+  "11": {
+    "focus": {
+      "vysledky": {
+        "SLOV": 1.2,
+        "SMER": 23.8,
+        "PS": 17.9,
+        "HLAS": 14.6,
+        "REP": 0.4,
+        "KDH": 7.5,
+        "DEM": 5.9
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 0.3,
+        "SMER": 24.0,
+        "PS": 20.1,
+        "HLAS": 15.4,
+        "REP": 0.1,
+        "KDH": 6.9,
+        "DEM": 3.9
+      },
+      "mandaty": null
+    },
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 1.1,
+        "SMER": 24.0,
+        "PS": 19.1,
+        "HLAS": 15.1,
+        "REP": 1.0,
+        "KDH": 5.8,
+        "DEM": 4.9
+      },
+      "mandaty": null
+    }
+  },
+  "09": {
+    "unknown": {
+      "vysledky": {
+        "SLOV": 0.84,
+        "SMER": 22.95,
+        "PS": 17.96,
+        "HLAS": 14.7,
+        "REP": 1.6,
+        "KDH": 6.82,
+        "DEM": 4.99
+      },
+      "mandaty": null
+    }
+  }
+}

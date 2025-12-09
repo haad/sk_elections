@@ -1,226 +1,576 @@
 {
-    "12": {
-        "ako": {
-            "vysledky": {
-                "PS": 22.8,
-                "SMER": 20.3,
-                "REP": 5.4,
-                "HLAS": 13.9,
-                "SLOV": 6.2,
-                "SAS": 6.6,
-                "KDH": 7.3,
-                "DEM": 4.3,
-                "Aliancia": 3.2,
-                "SNS": 4.6,
-                "ROD": 3.8
-            },
-            "mandaty": {
-                "PS": 42,
-                "SMER": 37,
-                "REP": 10,
-                "HLAS": 25,
-                "SLOV": 11,
-                "SAS": 12,
-                "KDH": 13
-            }
-        },
-        "focus": {
-            "vysledky": {
-                "PS": 21.5,
-                "SMER": 20.8,
-                "REP": 8.1,
-                "HLAS": 13.8,
-                "SLOV": 5.2,
-                "SAS": 6.1,
-                "KDH": 6.9,
-                "DEM": 4.0,
-                "Aliancia": 5.6,
-                "SNS": 3.7
-            },
-            "mandaty": {
-                "PS": 37,
-                "SMER": 36,
-                "REP": 14,
-                "HLAS": 23,
-                "SLOV": 9,
-                "SAS": 10,
-                "KDH": 12
-            }
-        },
-        "nms": {
-            "vysledky": {
-                "PS": 24.8,
-                "SMER": 19.1,
-                "REP": 9.8,
-                "HLAS": 10.7,
-                "SLOV": 6.5,
-                "SAS": 4.8,
-                "KDH": 5.5,
-                "DEM": 3.9,
-                "Aliancia": 3.2
-            },
-            "mandaty": {
-            }
-        }
+  "12": {
+    "ako": {
+      "vysledky": {
+        "PS": 22.8,
+        "SMER": 20.3,
+        "REP": 5.4,
+        "HLAS": 13.9,
+        "SLOV": 6.2,
+        "SAS": 6.6,
+        "KDH": 7.3,
+        "DEM": 4.3,
+        "Aliancia": 3.2,
+        "SNS": 4.6,
+        "ROD": 3.8
+      },
+      "mandaty": {
+        "PS": 42,
+        "SMER": 37,
+        "REP": 10,
+        "HLAS": 25,
+        "SLOV": 11,
+        "SAS": 12,
+        "KDH": 13
+      }
     },
-    "11": {
-        "ako": {
-            "vysledky": {
-                "PS": 21.2,
-                "SMER": 20.7,
-                "REP": 5.9,
-                "HLAS": 14.7,
-                "SLOV": 6.6,
-                "SAS": 6.9,
-                "KDH": 6.7,
-                "DEM": 4.1,
-                "Aliancia": 3.7,
-                "SNS": 4.7,
-                "ROD": 3.6
-            },
-            "mandaty": {
-                "PS": 39,
-                "SMER": 37,
-                "REP": 11,
-                "HLAS": 27,
-                "SLOV": 12,
-                "SAS": 12,
-                "KDH": 12
-            }
-        },
-        "focus": {
-            "vysledky": {
-                "PS": 22.6,
-                "SMER": 21.9,
-                "REP": 8.6,
-                "HLAS": 13.3,
-                "SLOV": 3.6,
-                "SAS": 6.7,
-                "KDH": 6.2,
-                "DEM": 4.6,
-                "Aliancia": 4.8,
-                "SNS": 3.6,
-                "ROD": 3.3
-            },
-            "mandaty": {
-                "PS": 43,
-                "SMER": 41,
-                "REP": 16,
-                "HLAS": 25,
-                "SAS": 13,
-                "KDH": 12
-            }
-        },
-        "nms": {
-            "vysledky": {
-                "PS": 25.1,
-                "SMER": 19.1,
-                "REP": 8.7,
-                "HLAS": 10.8,
-                "SLOV": 4.7,
-                "SAS": 6.0,
-                "KDH": 6.4,
-                "DEM": 4.4,
-                "Aliancia": 3.7,
-                "SNS": 3.3
-            },
-            "mandaty": {
-                "PS": 50,
-                "SMER": 38,
-                "REP": 17,
-                "HLAS": 21,
-                "SAS": 12,
-                "KDH": 12
-            }
-        }
+    "focus": {
+      "vysledky": {
+        "PS": 21.5,
+        "SMER": 20.8,
+        "REP": 8.1,
+        "HLAS": 13.8,
+        "SLOV": 5.2,
+        "SAS": 6.1,
+        "KDH": 6.9,
+        "DEM": 4.0,
+        "Aliancia": 5.6,
+        "SNS": 3.7
+      },
+      "mandaty": {
+        "PS": 37,
+        "SMER": 36,
+        "REP": 14,
+        "HLAS": 23,
+        "SLOV": 9,
+        "SAS": 10,
+        "KDH": 12
+      }
     },
-    "10": {
-        "ako": {
-            "vysledky": {
-                "PS": 21.3,
-                "SMER": 21.3,
-                "REP": 6.8,
-                "HLAS": 15.0,
-                "SLOV": 5.9,
-                "SAS": 6.5,
-                "KDH": 6.2,
-                "DEM": 4.7,
-                "Aliancia": 3.4,
-                "SNS": 4.8
-            },
-            "mandaty": {
-                "PS": 41,
-                "SMER": 41,
-                "REP": 14,
-                "HLAS": 29,
-                "SAS": 13,
-                "KDH": 12
-            }
-        },
-        "nms": {
-            "vysledky": {
-                "PS": 24.4,
-                "SMER": 20.5,
-                "REP": 7.4,
-                "HLAS": 12.0,
-                "SLOV": 5.2,
-                "SAS": 6.2,
-                "KDH": 6.9,
-                "DEM": 5.1,
-                "Aliancia": 3.6,
-                "ROD": 3.9
-            },
-            "mandaty": {
-                "PS": 42,
-                "SMER": 35,
-                "REP": 13,
-                "HLAS": 20,
-                "SAS": 10,
-                "KDH": 12,
-                "SLOV": 9,
-                "DEM": 9
-            }
-        }
-    },
-    "09": {
-        "ako": {
-            "vysledky": {
-                "PS": 22.4,
-                "SMER": 22.8,
-                "REP": 5.6,
-                "HLAS": 15.1,
-                "SLOV": 3.9,
-                "SAS": 6.4,
-                "KDH": 6.8,
-                "DEM": 4.9,
-                "Aliancia": 3.7,
-                "SNS": 4.9
-            },
-            "mandaty": {
-            }
-        },
-        "nms": {
-            "vysledky": {
-                "PS": 24.5,
-                "SMER": 23.9,
-                "REP": 6.0,
-                "HLAS": 12.6,
-                "SLOV": 3.9,
-                "SAS": 6.1,
-                "KDH": 6.2,
-                "DEM": 3.3,
-                "Aliancia": 3.4,
-                "ROD": 3.9,
-                "SNS": 3.5
-            },
-            "mandaty": {
-                "PS": 46,
-                "SMER": 45,
-                "REP": 11,
-                "HLAS": 24,
-                "SAS": 12,
-                "KDH": 12
-            }
-        }
+    "nms": {
+      "vysledky": {
+        "PS": 24.8,
+        "SMER": 19.1,
+        "REP": 9.8,
+        "HLAS": 10.7,
+        "SLOV": 6.5,
+        "SAS": 4.8,
+        "KDH": 5.5,
+        "DEM": 3.9,
+        "Aliancia": 3.2
+      },
+      "mandaty": {}
     }
+  },
+  "11": {
+    "ako": {
+      "vysledky": {
+        "PS": 21.2,
+        "SMER": 20.7,
+        "REP": 5.9,
+        "HLAS": 14.7,
+        "SLOV": 6.6,
+        "SAS": 6.9,
+        "KDH": 6.7,
+        "DEM": 4.1,
+        "Aliancia": 3.7,
+        "SNS": 4.7,
+        "ROD": 3.6
+      },
+      "mandaty": {
+        "PS": 39,
+        "SMER": 37,
+        "REP": 11,
+        "HLAS": 27,
+        "SLOV": 12,
+        "SAS": 12,
+        "KDH": 12
+      }
+    },
+    "focus": {
+      "vysledky": {
+        "PS": 22.6,
+        "SMER": 21.9,
+        "REP": 8.6,
+        "HLAS": 13.3,
+        "SLOV": 3.6,
+        "SAS": 6.7,
+        "KDH": 6.2,
+        "DEM": 4.6,
+        "Aliancia": 4.8,
+        "SNS": 3.6,
+        "ROD": 3.3
+      },
+      "mandaty": {
+        "PS": 43,
+        "SMER": 41,
+        "REP": 16,
+        "HLAS": 25,
+        "SAS": 13,
+        "KDH": 12
+      }
+    },
+    "nms": {
+      "vysledky": {
+        "PS": 25.1,
+        "SMER": 19.1,
+        "REP": 8.7,
+        "HLAS": 10.8,
+        "SLOV": 4.7,
+        "SAS": 6.0,
+        "KDH": 6.4,
+        "DEM": 4.4,
+        "Aliancia": 3.7,
+        "SNS": 3.3
+      },
+      "mandaty": {
+        "PS": 50,
+        "SMER": 38,
+        "REP": 17,
+        "HLAS": 21,
+        "SAS": 12,
+        "KDH": 12
+      }
+    },
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 1.2,
+        "SMER": 21.9,
+        "PS": 22.6,
+        "HLAS": 12.8,
+        "REP": 0.6,
+        "KDH": 6.9,
+        "DEM": 0.7
+      },
+      "mandaty": null
+    }
+  },
+  "10": {
+    "ako": {
+      "vysledky": {
+        "PS": 21.3,
+        "SMER": 21.3,
+        "REP": 6.8,
+        "HLAS": 15.0,
+        "SLOV": 5.9,
+        "SAS": 6.5,
+        "KDH": 6.2,
+        "DEM": 4.7,
+        "Aliancia": 3.4,
+        "SNS": 4.8
+      },
+      "mandaty": {
+        "PS": 41,
+        "SMER": 41,
+        "REP": 14,
+        "HLAS": 29,
+        "SAS": 13,
+        "KDH": 12
+      }
+    },
+    "nms": {
+      "vysledky": {
+        "PS": 24.4,
+        "SMER": 20.5,
+        "REP": 7.4,
+        "HLAS": 12.0,
+        "SLOV": 5.2,
+        "SAS": 6.2,
+        "KDH": 6.9,
+        "DEM": 5.1,
+        "Aliancia": 3.6,
+        "ROD": 3.9
+      },
+      "mandaty": {
+        "PS": 42,
+        "SMER": 35,
+        "REP": 13,
+        "HLAS": 20,
+        "SAS": 10,
+        "KDH": 12,
+        "SLOV": 9,
+        "DEM": 9
+      }
+    }
+  },
+  "09": {
+    "ako": {
+      "vysledky": {
+        "PS": 22.4,
+        "SMER": 22.8,
+        "REP": 5.6,
+        "HLAS": 15.1,
+        "SLOV": 3.9,
+        "SAS": 6.4,
+        "KDH": 6.8,
+        "DEM": 4.9,
+        "Aliancia": 3.7,
+        "SNS": 4.9
+      },
+      "mandaty": {}
+    },
+    "nms": {
+      "vysledky": {
+        "PS": 24.5,
+        "SMER": 23.9,
+        "REP": 6.0,
+        "HLAS": 12.6,
+        "SLOV": 3.9,
+        "SAS": 6.1,
+        "KDH": 6.2,
+        "DEM": 3.3,
+        "Aliancia": 3.4,
+        "ROD": 3.9,
+        "SNS": 3.5
+      },
+      "mandaty": {
+        "PS": 46,
+        "SMER": 45,
+        "REP": 11,
+        "HLAS": 24,
+        "SAS": 12,
+        "KDH": 12
+      }
+    },
+    "focus": {
+      "vysledky": {
+        "SLOV": 4.7,
+        "SMER": 23.3,
+        "PS": 22.1,
+        "HLAS": 12.8,
+        "REP": 0.1,
+        "KDH": 6.0,
+        "DEM": 1.2
+      },
+      "mandaty": null
+    },
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 3.4,
+        "SMER": 25.5,
+        "PS": 21.6,
+        "HLAS": 11.9,
+        "REP": 2.0,
+        "KDH": 6.0,
+        "DEM": 3.9
+      },
+      "mandaty": null
+    }
+  },
+  "08": {
+    "nms": {
+      "vysledky": {
+        "SLOV": 1.1,
+        "SMER": 22.4,
+        "PS": 23.1,
+        "HLAS": 14.3,
+        "REP": 3.2,
+        "KDH": 6.2,
+        "DEM": 0.7
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 0.2,
+        "SMER": 23.6,
+        "PS": 22.0,
+        "HLAS": 15.9,
+        "REP": 0.9,
+        "KDH": 6.9,
+        "DEM": 1.6
+      },
+      "mandaty": null
+    }
+  },
+  "07": {
+    "focus": {
+      "vysledky": {
+        "SLOV": 3.4,
+        "SMER": 25.7,
+        "PS": 21.3,
+        "HLAS": 11.3,
+        "REP": 1.0,
+        "KDH": 7.3,
+        "DEM": 4.4
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 0.5,
+        "SMER": 23.5,
+        "PS": 21.7,
+        "HLAS": 15.5,
+        "REP": 0.7,
+        "KDH": 7.4,
+        "DEM": 1.8
+      },
+      "mandaty": null
+    },
+    "nms": {
+      "vysledky": {
+        "SLOV": 1.5,
+        "SMER": 22.5,
+        "PS": 22.6,
+        "HLAS": 13.1,
+        "REP": 1.2,
+        "KDH": 6.0,
+        "DEM": 0.1
+      },
+      "mandaty": null
+    },
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 0.9,
+        "SMER": 25.2,
+        "PS": 22.3,
+        "HLAS": 13.5,
+        "REP": 0.8,
+        "KDH": 6.3,
+        "DEM": 2.9
+      },
+      "mandaty": null
+    }
+  },
+  "06": {
+    "ako": {
+      "vysledky": {
+        "SLOV": 5.1,
+        "SMER": 23.8,
+        "PS": 22.8,
+        "HLAS": 15.2,
+        "REP": 0.8,
+        "KDH": 6.8,
+        "DEM": 1.0
+      },
+      "mandaty": null
+    },
+    "focus": {
+      "vysledky": {
+        "SLOV": 4.7,
+        "SMER": 24.2,
+        "PS": 21.6,
+        "HLAS": 14.5,
+        "REP": 1.8,
+        "KDH": 6.6,
+        "DEM": 2.6
+      },
+      "mandaty": null
+    },
+    "unknown": {
+      "vysledky": {
+        "SLOV": 0.48,
+        "SMER": 24.77,
+        "PS": 27.82,
+        "HLAS": 7.18,
+        "REP": 2.06,
+        "KDH": 7.15,
+        "DEM": 3.05
+      },
+      "mandaty": null
+    },
+    "nms": {
+      "vysledky": {
+        "SLOV": 0.8,
+        "SMER": 22.4,
+        "PS": 23.7,
+        "HLAS": 15.8,
+        "REP": 3.0,
+        "KDH": 5.6,
+        "DEM": 1.3
+      },
+      "mandaty": null
+    }
+  },
+  "05": {
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 3.5,
+        "SMER": 25.0,
+        "PS": 21.0,
+        "HLAS": 14.0,
+        "REP": 2.9,
+        "KDH": 7.1,
+        "DEM": 4.0
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 5.2,
+        "SMER": 21.8,
+        "PS": 20.8,
+        "HLAS": 17.2,
+        "REP": 0.6,
+        "KDH": 7.3,
+        "DEM": 1.0
+      },
+      "mandaty": null
+    },
+    "nms": {
+      "vysledky": {
+        "SLOV": 0.6,
+        "SMER": 20.9,
+        "PS": 23.1,
+        "HLAS": 14.9,
+        "REP": 3.2,
+        "KDH": 5.4,
+        "DEM": 2.2
+      },
+      "mandaty": null
+    }
+  },
+  "04": {
+    "focus": {
+      "vysledky": {
+        "SLOV": 0.9,
+        "SMER": 21.1,
+        "PS": 19.7,
+        "HLAS": 18.0,
+        "REP": 0.1,
+        "KDH": 6.9,
+        "DEM": 1.4
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 0.8,
+        "SMER": 21.2,
+        "PS": 20.1,
+        "HLAS": 16.5,
+        "REP": 1.3,
+        "KDH": 7.9,
+        "DEM": 1.1
+      },
+      "mandaty": null
+    }
+  },
+  "03": {
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 4.1,
+        "SMER": 21.6,
+        "PS": 20.2,
+        "HLAS": 16.3,
+        "REP": 3.0,
+        "KDH": 6.2,
+        "DEM": 1.4
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 1.3,
+        "SMER": 22.1,
+        "PS": 21.0,
+        "HLAS": 15.9,
+        "REP": 0.5,
+        "KDH": 8.1,
+        "DEM": 1.1
+      },
+      "mandaty": null
+    }
+  },
+  "02": {
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 1.6,
+        "SMER": 22.7,
+        "PS": 21.3,
+        "HLAS": 16.5,
+        "REP": 0.5,
+        "KDH": 6.7,
+        "DEM": 1.4
+      },
+      "mandaty": null
+    },
+    "focus": {
+      "vysledky": {
+        "SLOV": 2.7,
+        "SMER": 21.1,
+        "PS": 18.9,
+        "HLAS": 17.2,
+        "REP": 0.4,
+        "KDH": 6.1,
+        "DEM": 2.2
+      },
+      "mandaty": null
+    },
+    "nms": {
+      "vysledky": {
+        "SLOV": 1.6,
+        "SMER": 21.0,
+        "PS": 22.0,
+        "HLAS": 16.9,
+        "REP": 0.2,
+        "KDH": 7.2,
+        "DEM": 1.0
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 0.2,
+        "SMER": 24.0,
+        "PS": 22.6,
+        "HLAS": 14.5,
+        "REP": 0.4,
+        "KDH": 8.2,
+        "DEM": 1.4
+      },
+      "mandaty": null
+    }
+  },
+  "01": {
+    "ipsos": {
+      "vysledky": {
+        "SLOV": 1.6,
+        "SMER": 24.5,
+        "PS": 20.6,
+        "HLAS": 15.4,
+        "REP": 0.5,
+        "KDH": 6.6,
+        "DEM": 3.9
+      },
+      "mandaty": null
+    },
+    "focus": {
+      "vysledky": {
+        "SLOV": 1.7,
+        "SMER": 21.6,
+        "PS": 19.4,
+        "HLAS": 17.9,
+        "REP": 0.2,
+        "KDH": 6.2,
+        "DEM": 2.2
+      },
+      "mandaty": null
+    },
+    "ako": {
+      "vysledky": {
+        "SLOV": 1.0,
+        "SMER": 22.1,
+        "PS": 19.9,
+        "HLAS": 14.3,
+        "REP": 0.4,
+        "KDH": 8.7,
+        "DEM": 2.2
+      },
+      "mandaty": null
+    },
+    "nms": {
+      "vysledky": {
+        "SLOV": 0.5,
+        "SMER": 22.3,
+        "PS": 21.1,
+        "HLAS": 14.7,
+        "REP": 0.7,
+        "KDH": 6.9,
+        "DEM": 1.2
+      },
+      "mandaty": null
+    }
+  }
 }

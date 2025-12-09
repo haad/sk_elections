@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List, Tuple, Optional
 import numpy as np
 from scipy import stats
@@ -1309,6 +1309,53 @@ def plot_kalman_trends(records: List[Dict],
     opp_lower = [v - 1.96 * u for v, u in zip(opp_values, opp_unc)]
     ax2.fill_between(opp_dates, opp_lower, opp_upper, color='blue', alpha=0.15)
 
+    # Add forecast for coalition blocks
+    gov_forecast_totals = []
+    opp_forecast_totals = []
+    gov_forecast_unc = []
+    opp_forecast_unc = []
+
+    # Generate forecast dates
+    for i in range(1, months_ahead + 1):
+        forecast_date = last_date + timedelta(days=30 * i)
+        gov_sum = 0
+        opp_sum = 0
+        gov_var = 0
+        opp_var = 0
+
+        for party in government:
+            forecast = kalman_forecast(records, party, months_ahead, process_noise, measurement_noise)
+            if forecast and i <= len(forecast):
+                _, v, u = forecast[i - 1]
+                gov_sum += v
+                gov_var += u ** 2
+
+        for party in opposition:
+            forecast = kalman_forecast(records, party, months_ahead, process_noise, measurement_noise)
+            if forecast and i <= len(forecast):
+                _, v, u = forecast[i - 1]
+                opp_sum += v
+                opp_var += u ** 2
+
+        gov_forecast_totals.append((forecast_date, gov_sum))
+        opp_forecast_totals.append((forecast_date, opp_sum))
+        gov_forecast_unc.append(np.sqrt(gov_var))
+        opp_forecast_unc.append(np.sqrt(opp_var))
+
+    if gov_forecast_totals:
+        gf_dates, gf_values = zip(*gov_forecast_totals)
+        of_dates, of_values = zip(*opp_forecast_totals)
+
+        ax2.plot(gf_dates, gf_values, '--', color='red', alpha=0.7, linewidth=1.5)
+        gf_upper = [v + 1.96 * u for v, u in zip(gf_values, gov_forecast_unc)]
+        gf_lower = [v - 1.96 * u for v, u in zip(gf_values, gov_forecast_unc)]
+        ax2.fill_between(gf_dates, gf_lower, gf_upper, color='red', alpha=0.08)
+
+        ax2.plot(of_dates, of_values, '--', color='blue', alpha=0.7, linewidth=1.5)
+        of_upper = [v + 1.96 * u for v, u in zip(of_values, opp_forecast_unc)]
+        of_lower = [v - 1.96 * u for v, u in zip(of_values, opp_forecast_unc)]
+        ax2.fill_between(of_dates, of_lower, of_upper, color='blue', alpha=0.08)
+
     ax2.axhline(y=50, color='green', linestyle='--', alpha=0.5, label='50% mark')
     ax2.axvline(x=last_date, color='gray', linestyle=':', alpha=0.7)
 
@@ -1351,6 +1398,46 @@ def plot_kalman_trends(records: List[Dict],
 
         last_seat_date = max(gs_dates)
         ax3.axvline(x=last_seat_date, color='gray', linestyle=':', alpha=0.7)
+
+        # Add forecast for seats based on percentage forecasts
+        # Use a simple conversion: seats ≈ percentage * 1.5 (rough approximation for parties above threshold)
+        if len(gs_values) >= 3:
+            gov_seat_forecast = []
+            opp_seat_forecast = []
+
+            for i in range(1, months_ahead + 1):
+                forecast_date = last_seat_date + timedelta(days=30 * i)
+                gov_seats_sum = 0
+                opp_seats_sum = 0
+
+                for party in government:
+                    forecast = kalman_forecast(records, party, months_ahead, process_noise, measurement_noise)
+                    if forecast and i <= len(forecast):
+                        _, pct, _ = forecast[i - 1]
+                        # Approximate seats from percentage (parties above 5% get ~1.5x their percentage in seats)
+                        if pct >= 5:
+                            gov_seats_sum += pct * 1.7
+                        elif pct >= 3:
+                            gov_seats_sum += pct * 0.5
+
+                for party in opposition:
+                    forecast = kalman_forecast(records, party, months_ahead, process_noise, measurement_noise)
+                    if forecast and i <= len(forecast):
+                        _, pct, _ = forecast[i - 1]
+                        if pct >= 5:
+                            opp_seats_sum += pct * 1.7
+                        elif pct >= 3:
+                            opp_seats_sum += pct * 0.5
+
+                gov_seat_forecast.append((forecast_date, gov_seats_sum))
+                opp_seat_forecast.append((forecast_date, opp_seats_sum))
+
+            if gov_seat_forecast:
+                gsf_dates, gsf_values = zip(*gov_seat_forecast)
+                osf_dates, osf_values = zip(*opp_seat_forecast)
+
+                ax3.plot(gsf_dates, gsf_values, '--', color='red', alpha=0.5, linewidth=1.5)
+                ax3.plot(osf_dates, osf_values, '--', color='blue', alpha=0.5, linewidth=1.5)
 
     ax3.axhline(y=76, color='green', linestyle='--', alpha=0.5, label='Majority (76)')
     ax3.axhline(y=90, color='orange', linestyle='--', alpha=0.5, label='Constitutional (90)')
@@ -1511,7 +1598,7 @@ def main():
     parser.add_argument("--full-stats", action="store_true",
                         help="Run all statistical analyses")
     parser.add_argument("--graph", action="store_true",
-                        help="Generate graphs/charts (requires --output-dir)")
+                        help="Generate graphs/charts (saves to --output-dir if specified, otherwise shows interactively)")
     args = parser.parse_args()
 
     # Determine output file path
@@ -1536,7 +1623,7 @@ def main():
     print_input_data(party_series, args.threshold)
 
     # Check if we should generate graphs
-    generate_graphs = args.graph and args.output_dir
+    generate_graphs = args.graph
 
     if args.kalman:
         # Use Kalman filtering
@@ -1559,8 +1646,10 @@ def main():
     if args.correlations or args.full_stats:
         print_correlations(records, args.threshold)
         if generate_graphs:
-            from pathlib import Path
-            corr_file = str(Path(args.output_dir) / "correlations.png")
+            corr_file = None
+            if args.output_dir:
+                from pathlib import Path
+                corr_file = str(Path(args.output_dir) / "correlations.png")
             plot_correlations(records, corr_file, args.threshold)
 
     if args.volatility or args.full_stats:
