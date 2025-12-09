@@ -187,6 +187,33 @@ The scraper fetches both vote percentages (`vysledky`) and seat projections (`ma
 
 ---
 
+### 5. 🌐 Generate Static HTML Site
+
+Generate a static HTML site with all analysis that can be hosted on GitHub Pages:
+
+```bash
+# Generate with default settings (threshold 5%, forecast 6 months)
+python generate_html.py --output-dir docs/
+
+# Custom parameters
+python generate_html.py --output-dir docs/ --threshold 5 --forecast 6
+
+# Serve locally for testing
+cd docs/ && python -m http.server 8000
+```
+
+The generated site includes:
+- Party trends chart with Kalman filtering
+- Coalition blocks comparison
+- Parliament seats projection
+- Correlation heatmap
+- Volatility analysis table
+- 6-month forecast with confidence intervals
+
+For GitHub Pages, set the repository to serve from the `docs/` folder.
+
+---
+
 ## 🧱 Political Blocks
 
 Block classification used in simulation:
