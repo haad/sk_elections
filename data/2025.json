@@ -24,6 +24,26 @@
         "KDH": 9,
         "DEM": 10
       }
+    },
+    "focus": {
+      "vysledky": {
+        "SLOV": 4.3,
+        "SMER": 17.4,
+        "PS": 21.7,
+        "HLAS": 8.8,
+        "REP": 2.2,
+        "KDH": 7.2,
+        "DEM": 4.3
+      },
+      "mandaty": {
+        "SLOV": 12,
+        "SMER": 31,
+        "PS": 38,
+        "HLAS": 15,
+        "REP": 10,
+        "KDH": 13,
+        "DEM": 7
+      }
     }
   },
   "11": {
