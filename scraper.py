@@ -44,14 +44,14 @@ PARTY_MAPPING = {
 
     # Republika
     "Republika": "REP",
+    "Republic": "REP",
     "REP": "REP",
-    "R": "REP",
 
     # Slovensko (Slovakia movement)
     "Slovensko": "SLOV",
-    "S": "SLOV",
+    "Slovakia": "SLOV",
     "SLOV": "SLOV",
-    "Slovensko (party)": "SLOV",
+    "OĽaNO and Friends": "SLOV",
 
     # SaS (Freedom and Solidarity)
     "SaS": "SAS",
@@ -64,8 +64,8 @@ PARTY_MAPPING = {
 
     # Democrats
     "Demokrati": "DEM",
+    "Democrats": "DEM",
     "DEM": "DEM",
-    "D": "DEM",
 
     # SNS
     "SNS": "SNS",
@@ -73,13 +73,13 @@ PARTY_MAPPING = {
 
     # Magyar Alliance
     "Aliancia": "Aliancia",
-    "MA": "Aliancia",
+    "Hungarian Alliance": "Aliancia",
     "Szövetség": "Aliancia",
     "Magyar Szövetség": "Aliancia",
 
     # Sme Rodina
     "Sme rodina": "ROD",
-    "SR": "ROD",
+    "We Are Family": "ROD",
     "ROD": "ROD",
     "Sme Rodina": "ROD",
 }
@@ -337,8 +337,13 @@ def parse_polling_table(df: pd.DataFrame, table_type: str = 'percentages') -> Li
             agency_col = col
         else:
             # Check if it's a party column
+            # Skip columns we don't want (ĽSNS, Others, Lead)
+            if any(skip in col_lower for skip in ['ľsns', 'lsns', 'others', 'lead']):
+                continue
             for wiki_name, short_name in PARTY_MAPPING.items():
-                if wiki_name.lower() in col_lower:
+                # Use word boundary matching to avoid partial matches
+                pattern = r'\b' + re.escape(wiki_name.lower()) + r'\b'
+                if re.search(pattern, col_lower):
                     party_cols[col] = short_name
                     break
 

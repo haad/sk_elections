@@ -27,42 +27,52 @@
     },
     "ako": {
       "vysledky": {
-        "SLOV": 0.2,
         "SMER": 17.0,
         "PS": 23.6,
         "HLAS": 9.6,
-        "REP": 3.5,
+        "SLOV": 8.9,
         "KDH": 6.6,
-        "DEM": 6.6
+        "SAS": 7.4,
+        "SNS": 4.7,
+        "REP": 7.0,
+        "Aliancia": 3.9,
+        "DEM": 5.4,
+        "ROD": 2.2
       },
       "mandaty": {
-        "SLOV": 13,
         "SMER": 31,
         "PS": 40,
         "HLAS": 17,
-        "REP": 9,
+        "SLOV": 16,
         "KDH": 12,
+        "SAS": 13,
+        "REP": 12,
         "DEM": 9
       }
     },
     "focus": {
       "vysledky": {
-        "SLOV": 4.3,
         "SMER": 17.4,
         "PS": 21.7,
         "HLAS": 8.8,
-        "REP": 2.2,
+        "SLOV": 8.4,
         "KDH": 7.2,
-        "DEM": 4.3
+        "SAS": 6.7,
+        "SNS": 4.3,
+        "REP": 9.3,
+        "Aliancia": 4.0,
+        "DEM": 5.5,
+        "ROD": 2.3
       },
       "mandaty": {
-        "SLOV": 12,
         "SMER": 31,
         "PS": 38,
         "HLAS": 15,
-        "REP": 10,
+        "SLOV": 15,
         "KDH": 13,
-        "DEM": 7
+        "SAS": 12,
+        "REP": 16,
+        "DEM": 10
       }
     }
   },
