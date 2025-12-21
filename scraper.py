@@ -262,20 +262,37 @@ def identify_polling_table(df: pd.DataFrame) -> Tuple[bool, str]:
         return True, 'seats'
 
     # Check if values look like percentages (have decimals) or seats (integers)
-    # Look at first data row
+    # Look at first few data rows and multiple party columns
     if len(df) > 0:
+        party_keywords = ['smer', 'ps', 'hlas', 'kdh', 'sas', 'sns']
+        decimal_count = 0
+        integer_count = 0
+
         for col in df.columns:
             col_lower = str(col).lower()
-            if 'smer' in col_lower or 'ps' in col_lower:
-                try:
-                    val = df.iloc[0][col]
-                    if pd.notna(val):
-                        val_float = float(str(val).replace('%', ''))
-                        # Seats are typically integers < 50, percentages have decimals or are smaller
-                        if val_float == int(val_float) and val_float > 15:
-                            return True, 'seats'
-                except (ValueError, TypeError):
-                    pass
+            if any(pk in col_lower for pk in party_keywords):
+                # Check first 3 rows for this column
+                for row_idx in range(min(3, len(df))):
+                    try:
+                        val = df.iloc[row_idx][col]
+                        if pd.notna(val):
+                            val_str = str(val).replace('%', '').strip()
+                            val_float = float(val_str)
+                            # Check if it has a true decimal component
+                            if '.' in val_str and val_float != int(val_float):
+                                decimal_count += 1
+                            elif val_float == int(val_float) and val_float > 10:
+                                integer_count += 1
+                    except (ValueError, TypeError):
+                        pass
+
+        # If we found any decimals, it's percentages
+        # Seats are always whole numbers, percentages often have decimals
+        if decimal_count > 0:
+            return True, 'percentages'
+        elif integer_count > 3:
+            # Multiple large integers suggest seats
+            return True, 'seats'
 
     return True, 'percentages'
 
