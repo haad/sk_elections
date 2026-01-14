@@ -1,0 +1,29 @@
+{
+  "1": {
+    "nms": {
+      "vysledky": {
+        "PS": 20.8,
+        "SMER": 17.8,
+        "REP": 12.9,
+        "HLAS": 6.5,
+        "SLOV": 7.2,
+        "SAS": 6,
+        "KDH": 6.4,
+        "DEM": 5.5,
+        "Aliancia": 4.6,
+        "ROD": 3.2,
+        "SNS": 2.8
+      },
+      "mandaty": {
+        "PS": 38,
+        "SMER": 32,
+        "REP": 23,
+        "SLOV": 13,
+        "HLAS": 12,
+        "SAS": 11,
+        "KDH": 11,
+        "DEM": 10
+      }
+    }
+  }
+}
