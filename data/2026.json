@@ -25,5 +25,32 @@
         "DEM": 10
       }
     }
+  },
+  "01": {
+    "nms": {
+      "vysledky": {
+        "SMER": 17.8,
+        "PS": 20.8,
+        "HLAS": 6.5,
+        "SLOV": 0.6,
+        "KDH": 6.4,
+        "SAS": 6.0,
+        "SNS": 2.8,
+        "REP": 12.9,
+        "Aliancia": 4.6,
+        "DEM": 5.5,
+        "ROD": 3.2
+      },
+      "mandaty": {
+        "SMER": 32,
+        "PS": 38,
+        "HLAS": 12,
+        "SLOV": 13,
+        "KDH": 11,
+        "SAS": 11,
+        "REP": 23,
+        "DEM": 10
+      }
+    }
   }
 }
