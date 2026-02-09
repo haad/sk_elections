@@ -102,5 +102,23 @@
         "DEM": 11
       }
     }
+  },
+  "02": {
+    "unknown": {
+      "vysledky": {
+        "SMER": 15.3,
+        "PS": 19.3,
+        "HLAS": 6.0,
+        "SLOV": 0.3,
+        "KDH": 7.2,
+        "SAS": 7.4,
+        "SNS": 3.6,
+        "REP": 12.5,
+        "Aliancia": 3.0,
+        "DEM": 4.1,
+        "ROD": 2.6
+      },
+      "mandaty": null
+    }
   }
 }
