@@ -397,5 +397,57 @@
         "DEM": 11
       }
     }
+  },
+  "05": {
+    "nms": {
+      "vysledky": {
+        "SMER": 17.0,
+        "PS": 19.8,
+        "HLAS": 7.1,
+        "SLOV": 0.4,
+        "KDH": 5.5,
+        "SAS": 7.5,
+        "SNS": 2.7,
+        "REP": 11.8,
+        "Aliancia": 3.9,
+        "DEM": 5.9,
+        "ROD": 3.5
+      },
+      "mandaty": {
+        "SMER": 31,
+        "PS": 36,
+        "HLAS": 13,
+        "SLOV": 15,
+        "KDH": 10,
+        "SAS": 13,
+        "REP": 21,
+        "DEM": 11
+      }
+    },
+    "focus": {
+      "vysledky": {
+        "SMER": 18.1,
+        "PS": 18.3,
+        "HLAS": 8.4,
+        "SLOV": 9.4,
+        "KDH": 7.5,
+        "SAS": 7.2,
+        "SNS": 4.5,
+        "REP": 9.7,
+        "Aliancia": 3.8,
+        "DEM": 5.2,
+        "ROD": 3.1
+      },
+      "mandaty": {
+        "SMER": 33,
+        "PS": 33,
+        "HLAS": 15,
+        "SLOV": 17,
+        "KDH": 13,
+        "SAS": 13,
+        "REP": 17,
+        "DEM": 9
+      }
+    }
   }
 }
