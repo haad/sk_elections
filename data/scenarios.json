@@ -59,14 +59,25 @@
     },
     {
       "name": "PS+DEM+MK coalition",
-      "description": "PS, Democrats and Hungarian Alliance run as one coalition; 3/4 of DEM and Aliancia voters follow to the joint list",
+      "description": "PS, Democrats and Hungarian Alliance run as one coalition; 4/5 of DEM and Aliancia voters follow to the joint list",
       "modifications": {
         "transfers": [
-          {"from": "DEM", "to": "PS", "amount": "3/4"},
-          {"from": "Aliancia", "to": "PS", "amount": "3/4"}
+          {"from": "DEM", "to": "PS", "amount": "4/5"},
+          {"from": "Aliancia", "to": "PS", "amount": "4/5"}
         ],
         "DEM": 0,
         "Aliancia": 0
+      }
+    },
+    {
+      "name": "PS+DEM coalition, HLAS out",
+      "description": "PS and Democrats run as one list with a 1-point coalition bonus, while HLAS falls below the 5% threshold",
+      "modifications": {
+        "transfers": [
+          {"from": "DEM", "to": "PS", "amount": "1"}
+        ],
+        "PS": "+1",
+        "HLAS": 4.8
       }
     },
     {
