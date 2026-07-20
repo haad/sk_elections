@@ -32,6 +32,7 @@ from trend_analysis import (
     calculate_party_correlations,
     calculate_volatility,
     get_current_estimates,
+    parse_scenario_modifications,
 )
 
 
@@ -429,25 +430,7 @@ def get_scenario_data(records: List[Dict]) -> List[Dict]:
             modifications_raw = scenario_def.get("modifications", {})
 
             # Parse modifications
-            modifications = {}
-            for party, value in modifications_raw.items():
-                if party in ["from", "to", "amount"]:
-                    continue
-                if isinstance(value, str):
-                    if value.startswith('+') or value.startswith('-'):
-                        modifications[party] = current.get(party, 0) + float(value)
-                    else:
-                        modifications[party] = float(value)
-                else:
-                    modifications[party] = float(value)
-
-            # Handle transfer syntax
-            if "from" in modifications_raw and "to" in modifications_raw:
-                from_party = modifications_raw["from"]
-                to_party = modifications_raw["to"]
-                amount = float(modifications_raw.get("amount", 0))
-                modifications[from_party] = current.get(from_party, 0) - amount
-                modifications[to_party] = current.get(to_party, 0) + amount
+            modifications = parse_scenario_modifications(modifications_raw, current)
 
             # Apply to current state
             scenario_state = current.copy()

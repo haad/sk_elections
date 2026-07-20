@@ -735,6 +735,19 @@ def get_current_estimates(records: List[Dict]) -> Dict[str, float]:
     return current
 
 
+def _resolve_transfer_amount(amount, from_current: float) -> float:
+    """Resolve a transfer amount: a number means percentage points; a string
+    means a fraction of the source party's current support ("2/3" or "0.5")."""
+    if isinstance(amount, str):
+        if '/' in amount:
+            num, den = amount.split('/')
+            fraction = float(num) / float(den)
+        else:
+            fraction = float(amount)
+        return from_current * fraction
+    return float(amount)
+
+
 def parse_scenario_modifications(modifications: Dict[str, any], current: Dict[str, float]) -> Dict[str, float]:
     """
     Parse scenario modifications, supporting both absolute values and relative changes.
@@ -743,34 +756,47 @@ def parse_scenario_modifications(modifications: Dict[str, any], current: Dict[st
     - Absolute: {"HLAS": 4.5} - set HLAS to 4.5%
     - Relative: {"HLAS": "-3"} or {"HLAS": "+2"} - adjust by delta
     - Transfer: {"from": "HLAS", "to": "SMER", "amount": 3} - move 3% from HLAS to SMER
+    - Transfers list: {"transfers": [{"from": "DEM", "to": "PS", "amount": "2/3"}]}
+      A numeric amount is percentage points; a string amount is a fraction of
+      the source party's current support (e.g. "2/3" or "0.5").
+
+    Explicit absolute values override transfer results; relative values apply
+    on top of them.
     """
     result = {}
 
+    # Handle transfers first (computed from current support), so explicit
+    # per-party modifications below can override the source/target values
+    transfers = list(modifications.get("transfers", []))
+    if "from" in modifications and "to" in modifications and "amount" in modifications:
+        transfers.append({
+            "from": modifications["from"],
+            "to": modifications["to"],
+            "amount": modifications["amount"],
+        })
+
+    for transfer in transfers:
+        from_party = transfer["from"]
+        to_party = transfer["to"]
+        from_current = current.get(from_party, 0)
+        amount = _resolve_transfer_amount(transfer["amount"], from_current)
+
+        result[from_party] = result.get(from_party, from_current) - amount
+        result[to_party] = result.get(to_party, current.get(to_party, 0)) + amount
+
     for party, value in modifications.items():
-        if party in ["from", "to", "amount"]:
-            continue  # Handle transfer syntax separately
+        if party in ["from", "to", "amount", "transfers"]:
+            continue  # Transfer syntax handled above
 
         if isinstance(value, str):
-            # Relative change
+            # Relative change, applied on top of any transfer result
             if value.startswith('+') or value.startswith('-'):
                 delta = float(value)
-                result[party] = current.get(party, 0) + delta
+                result[party] = result.get(party, current.get(party, 0)) + delta
             else:
                 result[party] = float(value)
         else:
             result[party] = float(value)
-
-    # Handle transfer syntax
-    if "from" in modifications and "to" in modifications and "amount" in modifications:
-        from_party = modifications["from"]
-        to_party = modifications["to"]
-        amount = float(modifications["amount"])
-
-        from_current = current.get(from_party, 0)
-        to_current = current.get(to_party, 0)
-
-        result[from_party] = from_current - amount
-        result[to_party] = to_current + amount
 
     return result
 

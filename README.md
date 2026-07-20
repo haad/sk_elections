@@ -154,6 +154,7 @@ Modification formats:
 - **Absolute**: `{"HLAS": 4.5}` - set to exact percentage
 - **Relative**: `{"REP": "+3"}` or `{"SMER": "-2"}` - adjust by delta
 - **Transfer**: `{"from": "HLAS", "to": "SMER", "amount": 3}` - move voters between parties
+- **Transfers list**: `{"transfers": [{"from": "DEM", "to": "PS", "amount": "2/3"}]}` - multiple transfers; a numeric amount is percentage points, a string amount (`"2/3"`, `"0.5"`, `"1"`) is a fraction of the source party's current support. Explicit absolute values override transfer results (e.g. `"DEM": 0` to model a joint list), while relative values (`"KDH": "+1.2"`) apply on top of them.
 
 Run custom scenarios:
 
