@@ -224,18 +224,20 @@ def parse_date(date_str: str) -> Optional[Tuple[int, int, int]]:
     return None
 
 
-def extract_tables_from_html(html: str) -> List[pd.DataFrame]:
-    """Extract polling tables from Wikipedia HTML."""
+def extract_tables_from_html(html: str) -> List[Tuple[str, pd.DataFrame]]:
+    """Extract polling tables from Wikipedia HTML as (section_heading, df) pairs."""
     soup = BeautifulSoup(html, 'html.parser')
     tables = []
 
     # Find all wikitables
     for table in soup.find_all('table', class_='wikitable'):
+        heading_tag = table.find_previous(['h2', 'h3', 'h4'])
+        heading = heading_tag.get_text(strip=True) if heading_tag else ''
         try:
             # Convert to pandas DataFrame
             from io import StringIO
             df = pd.read_html(StringIO(str(table)))[0]
-            tables.append(df)
+            tables.append((heading, df))
         except Exception as e:
             print(f"Warning: Could not parse table: {e}")
             continue
@@ -338,7 +340,9 @@ def parse_polling_table(df: pd.DataFrame, table_type: str = 'percentages') -> Li
         else:
             # Check if it's a party column
             # Skip columns we don't want (ĽSNS, Others, Lead)
-            if any(skip in col_lower for skip in ['ľsns', 'lsns', 'others', 'lead']):
+            # Also skip ZĽ/KÚ subcolumns of "OĽaNO and Friends" so SLOV
+            # only gets the Slovakia party value, not its former partners
+            if any(skip in col_lower for skip in ['ľsns', 'lsns', 'others', 'lead', 'zľ', 'kú']):
                 continue
             for wiki_name, short_name in PARTY_MAPPING.items():
                 # Use word boundary matching to avoid partial matches
@@ -405,7 +409,11 @@ def scrape_wikipedia_polls(url: str) -> List[Dict]:
     percentage_records = []
     seats_records = []
 
-    for i, df in enumerate(tables):
+    for i, (heading, df) in enumerate(tables):
+        # Skip hypothetical "Scenario Polls" tables — not real polling data
+        if 'scenario' in heading.lower():
+            print(f"Skipping scenario table {i+1} ({heading})")
+            continue
         is_polling, table_type = identify_polling_table(df)
         if is_polling:
             print(f"Parsing {table_type} table {i+1}...")
