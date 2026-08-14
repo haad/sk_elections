@@ -123,12 +123,21 @@ def fetch_wikipedia_page(url: str) -> str:
         'disableeditsection': 'true',
     }
 
+    # Wikimedia UA policy requires a real contact; fake ones get 429-blocked
     headers = {
-        'User-Agent': 'PollingDataScraper/1.0 (Slovak Election Analysis; contact@example.com)',
+        'User-Agent': 'sk-elections-poll-tracker/1.0 (https://github.com/haad/sk_elections; adam.hamsik@lablabs.io) requests',
         'Accept': 'application/json',
     }
 
-    response = requests.get(api_url, params=params, headers=headers, timeout=30)
+    max_attempts = 4
+    for attempt in range(1, max_attempts + 1):
+        response = requests.get(api_url, params=params, headers=headers, timeout=30)
+        if response.status_code == 429 and attempt < max_attempts:
+            delay = int(response.headers.get('Retry-After', 0)) or 10 * attempt
+            print(f"Got 429, retrying in {delay}s (attempt {attempt}/{max_attempts})")
+            time.sleep(delay)
+            continue
+        break
     response.raise_for_status()
 
     data = response.json()
