@@ -723,6 +723,31 @@
         "REP": 22,
         "DEM": 9
       }
+    },
+    "ipsos": {
+      "vysledky": {
+        "SMER": 16.9,
+        "PS": 19.0,
+        "HLAS": 6.6,
+        "SLOV": 10.7,
+        "KDH": 7.0,
+        "SAS": 8.4,
+        "SNS": 2.2,
+        "REP": 12.8,
+        "Aliancia": 3.9,
+        "DEM": 5.5,
+        "ROD": 2.0
+      },
+      "mandaty": {
+        "SMER": 29,
+        "PS": 33,
+        "HLAS": 11,
+        "SLOV": 19,
+        "KDH": 12,
+        "SAS": 15,
+        "REP": 22,
+        "DEM": 9
+      }
     }
   }
 }
