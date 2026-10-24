@@ -799,6 +799,56 @@
         "SAS": 15,
         "REP": 27
       }
+    },
+    "ipsos": {
+      "vysledky": {
+        "SMER": 18.4,
+        "PS": 18.6,
+        "HLAS": 6.6,
+        "SLOV": 10.0,
+        "KDH": 7.3,
+        "SAS": 8.1,
+        "SNS": 2.0,
+        "REP": 10.8,
+        "Aliancia": 3.4,
+        "DEM": 5.3,
+        "ROD": 2.4
+      },
+      "mandaty": {
+        "SMER": 32,
+        "PS": 33,
+        "HLAS": 12,
+        "SLOV": 18,
+        "KDH": 13,
+        "SAS": 14,
+        "REP": 19,
+        "DEM": 9
+      }
+    },
+    "focus": {
+      "vysledky": {
+        "SMER": 17.0,
+        "PS": 17.4,
+        "HLAS": 8.5,
+        "SLOV": 9.7,
+        "KDH": 6.4,
+        "SAS": 6.3,
+        "SNS": 3.5,
+        "REP": 11.3,
+        "Aliancia": 4.4,
+        "DEM": 5.8,
+        "ROD": 4.3
+      },
+      "mandaty": {
+        "SMER": 31,
+        "PS": 32,
+        "HLAS": 15,
+        "SLOV": 18,
+        "KDH": 12,
+        "SAS": 11,
+        "REP": 21,
+        "DEM": 10
+      }
     }
   }
 }
