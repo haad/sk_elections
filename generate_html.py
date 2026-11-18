@@ -1057,6 +1057,38 @@ def generate_html_template(data: Dict) -> str:
             font-size: 0.9em;
         }
 
+        @media (max-width: 768px) {
+            header { padding: 16px 12px; }
+            header h1 { font-size: 1.4em; }
+            .container { padding: 12px; }
+            .card-body { padding: 14px; }
+
+            /* Compact controls; JS sets a negative sticky top so only the nav row stays pinned */
+            .controls {
+                padding: 8px 12px 0;
+                gap: 8px 16px;
+            }
+            .control-group { gap: 6px; }
+            .control-group label, .toggle-label { font-size: 0.85em; }
+            .control-group input[type="range"] { width: 80px; }
+
+            .nav-links {
+                flex: 0 0 calc(100% + 24px);
+                margin: 0 -12px;
+                padding: 4px 8px;
+                gap: 2px;
+                overflow-x: auto;
+                white-space: nowrap;
+                scrollbar-width: none;
+                -webkit-overflow-scrolling: touch;
+                border-top: 1px solid var(--light);
+            }
+            .nav-links::-webkit-scrollbar { display: none; }
+            .nav-links a { padding: 6px 10px; }
+
+            section.card { scroll-margin-top: 48px; }
+        }
+
         .block-legend {
             display: flex;
             justify-content: center;
@@ -1341,6 +1373,16 @@ def generate_html_template(data: Dict) -> str:
 
             // Set initial language
             setLanguage(currentLang);
+
+            // On mobile, let the controls scroll away and keep only the nav row pinned
+            const controls = document.querySelector('.controls');
+            const navLinks = controls.querySelector('.nav-links');
+            const mobileQuery = window.matchMedia('(max-width: 768px)');
+            const pinNav = () => {
+                controls.style.top = mobileQuery.matches ? `-${navLinks.offsetTop}px` : '';
+            };
+            new ResizeObserver(pinNav).observe(controls);
+            mobileQuery.addEventListener('change', pinNav);
 
             // Event listeners
             document.getElementById('thresholdSlider').addEventListener('input', (e) => {
