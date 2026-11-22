@@ -31,79 +31,52 @@
       }
     },
     {
-      "name": "PS-DEM coalition",
-      "description": "PS and Democrats run on a combined list",
-      "modifications": {
-        "PS": "+5.5",
-        "DEM": 0
-      }
-    },
-    {
       "name": "Government collapse",
       "description": "SMER drops 5%, split between PS and REP",
       "modifications": {
         "SMER": "-5",
-        "PS": "+2.5",
-        "REP": "+2.5"
+        "REP": "+2.5",
+        "PS+DEM": "+2.5"
       }
     },
     {
       "name": "Opposition unity",
-      "description": "PS, SAS, DEM, KDH form unified opposition bloc (simplified as PS gaining their support)",
+      "description": "PS+DEM, SAS and KDH form a unified opposition bloc (simplified as PS+DEM gaining their support)",
       "modifications": {
-        "PS": 40,
         "SAS": 0,
-        "DEM": 0,
-        "KDH": 0
+        "KDH": 0,
+        "PS+DEM": 40
       }
     },
     {
       "name": "PS+DEM+MK coalition",
-      "description": "PS, Democrats and Hungarian Alliance run as one coalition; 4/5 of DEM and Aliancia voters follow to the joint list",
+      "description": "Hungarian Alliance joins the PS+DEM list; 4/5 of Aliancia voters follow",
       "modifications": {
         "transfers": [
           {
-            "from": "DEM",
-            "to": "PS",
-            "amount": "4/5"
-          },
-          {
             "from": "Aliancia",
-            "to": "PS",
+            "to": "PS+DEM",
             "amount": "4/5"
           }
         ],
-        "DEM": 0,
         "Aliancia": 0
       }
     },
     {
       "name": "PS+DEM coalition, HLAS out",
-      "description": "PS and Democrats run as one list with a 1-point coalition bonus, while HLAS falls below the 5% threshold",
+      "description": "The PS+DEM list gets a 1-point coalition bonus, while HLAS falls below the 5% threshold",
       "modifications": {
-        "transfers": [
-          {
-            "from": "DEM",
-            "to": "PS",
-            "amount": "1"
-          }
-        ],
-        "PS": "+1",
-        "HLAS": 4.8
+        "HLAS": 4.8,
+        "PS+DEM": "+1"
       }
     },
     {
-      "name": "KDH+MK+DEM coalition",
-      "description": "KDH, Hungarian Alliance and Democrats run as one coalition on the KDH list",
+      "name": "KDH+MK coalition",
+      "description": "KDH and Hungarian Alliance run as one coalition on the KDH list",
       "modifications": {
         "transfers": [
           {
             "from": "Aliancia",
-            "to": "KDH",
-            "amount": "1"
-          },
-          {
-            "from": "DEM",
             "to": "KDH",
             "amount": "1"
           }
@@ -116,8 +89,50 @@
       "modifications": {
         "HLAS": 4.8,
         "KDH": 4.9,
-        "DEM": "+1.5",
-        "SLOV": "+2"
+        "SLOV": "+2",
+        "PS+DEM": "+1.5"
+      }
+    },
+    {
+      "name": "PS+DEM and KDH+MK lists, HLAS out",
+      "description": "KDH and Hungarian Alliance run together keeping 3/5 of MK voters; HLAS falls below 5%, losing 3/8 of its voters split equally between SMER, Republika and Slovensko; 2 points move from SMER to Republika so the two finish close together",
+      "modifications": {
+        "transfers": [
+          {
+            "from": "Aliancia",
+            "to": "KDH",
+            "amount": "3/5"
+          },
+          {
+            "from": "HLAS",
+            "to": "SMER",
+            "amount": "1/8"
+          },
+          {
+            "from": "HLAS",
+            "to": "REP",
+            "amount": "1/8"
+          },
+          {
+            "from": "HLAS",
+            "to": "SLOV",
+            "amount": "1/8"
+          },
+          {
+            "from": "SMER",
+            "to": "REP",
+            "amount": 2
+          }
+        ],
+        "Aliancia": 0
+      }
+    },
+    {
+      "name": "PS+DEM, HLAS and KDH out",
+      "description": "PS+DEM runs as one list at current polling; HLAS and KDH both fall just below the 5% threshold",
+      "modifications": {
+        "HLAS": 4.8,
+        "KDH": 4.8
       }
     }
   ]

@@ -32,6 +32,7 @@ from trend_analysis import (
     calculate_party_correlations,
     calculate_volatility,
     get_current_estimates,
+    retired_parties,
     parse_scenario_modifications,
 )
 
@@ -53,6 +54,7 @@ class NumpyEncoder(json.JSONEncoder):
 # Party colors matching Slovak political colors
 PARTY_COLORS = {
     "PS": "#6B2D5C",
+    "PS+DEM": "#6B2D5C",
     "SMER": "#E31E24",
     "HLAS": "#003DA5",
     "REP": "#1a1a1a",
@@ -67,7 +69,7 @@ PARTY_COLORS = {
 
 # Political blocks
 GOVERNMENT_PARTIES = ["SMER", "HLAS", "SNS", "REP"]
-OPPOSITION_PARTIES = ["PS", "SAS", "DEM", "SLOV", "KDH"]
+OPPOSITION_PARTIES = ["PS+DEM", "PS", "SAS", "DEM", "SLOV", "KDH"]
 CATHOLIC_PARTIES = ["KDH", "DEM", "SLOV", "ROD"]
 
 
@@ -92,6 +94,7 @@ def get_raw_chart_data(records: List[Dict], threshold: float, forecast_months: i
             "isGovernment": party in GOVERNMENT_PARTIES,
             "isOpposition": party in OPPOSITION_PARTIES,
             "isCatholic": party in CATHOLIC_PARTIES,
+            "retired": party in retired_parties(),
             "dates": dates,
             "values": values,
             "uncertainties": [0] * len(values),
@@ -148,6 +151,7 @@ def get_chart_data(records: List[Dict], threshold: float, forecast_months: int) 
             "isGovernment": party in GOVERNMENT_PARTIES,
             "isOpposition": party in OPPOSITION_PARTIES,
             "isCatholic": party in CATHOLIC_PARTIES,
+            "retired": party in retired_parties(),
             "dates": dates,
             "values": values,
             "uncertainties": uncertainties,
@@ -304,7 +308,9 @@ def get_correlation_data(records: List[Dict], threshold: float) -> Dict:
     for i, party in enumerate(parties):
         if party in kalman_series and kalman_series[party]:
             current = kalman_series[party][-1][1]
-            if current >= threshold:
+            # Skip parties too new to correlate (e.g. a joint list with 1-2 months of polls)
+            has_corr = any(not np.isnan(corr_matrix[i, j]) for j in range(len(parties)) if j != i)
+            if current >= threshold and has_corr:
                 filtered_parties.append(party)
                 filtered_indices.append(i)
 
@@ -420,7 +426,7 @@ def get_scenario_data(records: List[Dict]) -> List[Dict]:
                 {
                     "name": "Government collapse",
                     "description": "SMER drops 5%, split between PS and REP",
-                    "modifications": {"SMER": "-5", "PS": "+2.5", "REP": "+2.5"}
+                    "modifications": {"SMER": "-5", "PS+DEM": "+2.5", "REP": "+2.5"}
                 },
             ]
 
@@ -586,6 +592,7 @@ def generate_html(output_dir: str, threshold: float = 5.0, forecast_months: int 
             "generatedWith": "Generated with",
             "updated": "Updated",
             "useKalman": "Use Kalman Filter",
+            "inJointList": "in joint list",
         },
         "sk": {
             "title": "Analýza volebných prieskumov SR",
@@ -638,6 +645,7 @@ def generate_html(output_dir: str, threshold: float = 5.0, forecast_months: int 
             "generatedWith": "Generované pomocou",
             "updated": "Aktualizované",
             "useKalman": "Použiť Kalmanov filter",
+            "inJointList": "v spoločnej kandidátke",
         }
     }
 
@@ -1188,7 +1196,7 @@ def generate_html_template(data: Dict) -> str:
                     </div>
                     <div class="block-legend-item">
                         <div class="block-legend-color" style="background: var(--opp-color);"></div>
-                        <span><strong>Opposition:</strong> PS + SAS + DEM + SLOV + KDH</span>
+                        <span><strong>Opposition:</strong> PS+DEM + SAS + SLOV + KDH</span>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -1326,7 +1334,7 @@ def generate_html_template(data: Dict) -> str:
                 </div>
                 <div class="block-legend-item">
                     <div class="block-legend-color" style="background: var(--opp-color);"></div>
-                    <span><strong>${t('opposition')}:</strong> PS + SAS + DEM + SLOV + KDH</span>
+                    <span><strong>${t('opposition')}:</strong> PS+DEM + SAS + SLOV + KDH</span>
                 </div>
             `;
 
@@ -1420,7 +1428,8 @@ def generate_html_template(data: Dict) -> str:
             const partyData = getActivePartyData();
             return Object.entries(partyData)
                 .filter(([_, data]) => data.current >= currentThreshold)
-                .sort((a, b) => b[1].current - a[1].current);
+                // Parties now running inside a joint list keep their history line but sort last
+                .sort((a, b) => (a[1].retired - b[1].retired) || (b[1].current - a[1].current));
         }
 
         function renderTrendsChart() {
@@ -1575,7 +1584,11 @@ def generate_html_template(data: Dict) -> str:
                 if (data.isGovernment) blockBadge = '<span class="block-indicator gov">GOV</span>';
                 else if (data.isOpposition) blockBadge = '<span class="block-indicator opp">OPP</span>';
 
-                item.innerHTML = `
+                item.innerHTML = data.retired ? `
+                    <span class="legend-color" style="background: ${data.color}"></span>
+                    <span>${party}</span>
+                    <span class="trend">${t('inJointList')}</span>
+                ` : `
                     <span class="legend-color" style="background: ${data.color}"></span>
                     <span>${party}</span>
                     <span class="trend ${trendClass}">${data.current}% ${trendIcon}</span>

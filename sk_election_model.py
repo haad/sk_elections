@@ -107,7 +107,7 @@ def loss_fn(x, polls):
 
 def summarize_blocks(mandates: Dict[str, int]):
     government = {"SMER", "SNS", "HLAS", "REP"}
-    opposition = {"PS", "SAS", "DEM", "SLOV", "KDH"}
+    opposition = {"PS+DEM", "PS", "SAS", "DEM", "SLOV", "KDH"}
     catholic = {"DEM", "KDH", "SLOV", "ROD"}
 
     sum_government = sum(mandates.get(p, 0) for p in government)

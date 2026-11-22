@@ -223,6 +223,9 @@ def kalman_forecast(records: List[Dict], party: str, months_ahead: int = 6,
 
     Returns: List of (date, predicted_support, uncertainty)
     """
+    if party in retired_parties():
+        return []  # Party currently runs inside a joint list; no standalone forecast
+
     kf, results = run_kalman_filter(records, party, process_noise, measurement_noise)
     if not kf or not results:
         return []
@@ -586,7 +589,7 @@ def monte_carlo_simulation(records: List[Dict], params, n_simulations: int = 100
 
     # Run simulations
     government = {"SMER", "SNS", "HLAS", "REP"}
-    opposition = {"PS", "SAS", "DEM", "SLOV", "KDH"}
+    opposition = {"PS+DEM", "PS", "SAS", "DEM", "SLOV", "KDH"}
 
     gov_seats = []
     opp_seats = []
@@ -693,7 +696,7 @@ def run_scenario(records: List[Dict], params, scenario_name: str,
 
     # Get current Kalman estimates
     current = {}
-    for party in set(r['party'] for r in records):
+    for party in set(r['party'] for r in records) - retired_parties():
         kf, results = run_kalman_filter(records, party)
         if kf and results:
             support, _, _ = kf.get_state()
@@ -727,7 +730,7 @@ def run_scenario(records: List[Dict], params, scenario_name: str,
 def get_current_estimates(records: List[Dict]) -> Dict[str, float]:
     """Get current Kalman estimates for all parties."""
     current = {}
-    for party in set(r['party'] for r in records):
+    for party in set(r['party'] for r in records) - retired_parties():
         kf, results = run_kalman_filter(records, party)
         if kf and results:
             support, _, _ = kf.get_state()
@@ -914,22 +917,74 @@ def print_scenarios(records: List[Dict], params, threshold: float = 5.0,
         run_scenario(records, params, "REP surge (+3%)",
                      {"REP": rep_current + 3.0}, threshold)
 
-        # Scenario 5: PS + DEM merger (combined support)
-        ps_current = current.get("PS", 23)
-        dem_current = current.get("DEM", 5.5)
-        run_scenario(records, params, "PS + DEM combined list",
-                     {"PS": ps_current + dem_current, "DEM": 0}, threshold)
+
+
+# Joint lists: from `start` (year, month) until `end` (None = still running),
+# polls for the members are tracked as one party under `name`. Earlier polls
+# keep the members as separate parties.
+JOINT_LISTS = [
+    {"name": "PS+DEM", "members": ["PS", "DEM"], "start": (2026, 11), "end": None},
+]
+
+
+def retired_parties() -> set:
+    """Parties with no current standalone estimate: members of running joint
+    lists, and joint lists that have dissolved."""
+    retired = set()
+    for jl in JOINT_LISTS:
+        retired.update(jl["members"] if jl["end"] is None else [jl["name"]])
+    return retired
+
+
+def _merge_joint_list(results: Dict[str, float], jl: Dict) -> Dict[str, float]:
+    merged = {p: v for p, v in results.items() if p not in jl["members"]}
+    merged[jl["name"]] = round(sum(results.get(p, 0) for p in jl["members"]), 2)
+    return merged
+
+
+def apply_joint_lists(polls: Dict, folder_path: str = "data") -> Dict:
+    """Combine member parties into their joint list for polls within its period."""
+    from sk_election_model import ModelParams, calculate_mandates
+    params = ModelParams()
+    weights_path = os.path.join(folder_path, "weights.json")
+    if os.path.exists(weights_path):
+        with open(weights_path, "r", encoding="utf-8") as f:
+            params = ModelParams.from_dict(json.load(f))
+
+    for year, months in polls.items():
+        if not year.isdigit() or not isinstance(months, dict):
+            continue
+        for month, agencies in months.items():
+            ym = (int(year), int(month))
+            for jl in JOINT_LISTS:
+                if ym < jl["start"] or (jl["end"] and ym > jl["end"]):
+                    continue
+                for data in agencies.values():
+                    results = data.get("vysledky") if isinstance(data, dict) else None
+                    if not results or not any(p in results for p in jl["members"]):
+                        continue
+                    seats = data.get("mandaty")
+                    # A member polled below threshold on its own and got no seats:
+                    # the agency projection wasted its votes, so recompute seats
+                    wasted = seats and any(results.get(p, 0) > 0 and not seats.get(p)
+                                           for p in jl["members"])
+                    data["vysledky"] = _merge_joint_list(results, jl)
+                    if wasted:
+                        data["mandaty"] = calculate_mandates(data["vysledky"], params)
+                    elif seats:
+                        data["mandaty"] = _merge_joint_list(seats, jl)
+    return polls
 
 
 def load_all_polls(folder_path: str = "data") -> Dict:
-    """Load all poll data from JSON files."""
+    """Load all poll data from JSON files, with joint lists applied."""
     combined = {}
     for filename in os.listdir(folder_path):
         if filename.endswith(".json") and filename not in ["weights.json", "input.json"]:
             year = os.path.splitext(filename)[0]
             with open(os.path.join(folder_path, filename), "r", encoding="utf-8") as f:
                 combined[year] = json.load(f)
-    return combined
+    return apply_joint_lists(combined, folder_path)
 
 
 def flatten_to_timeseries(polls: Dict) -> List[Dict]:
@@ -1164,7 +1219,8 @@ def plot_trends(party_series: Dict[str, List[Tuple[datetime, float]]],
 
     # Define party colors (Slovak political colors)
     party_colors = {
-        "PS": "#6B2D5C",      # Purple
+        "PS": "#6B2D5C",
+        "PS+DEM": "#6B2D5C",      # Purple
         "SMER": "#E31E24",    # Red
         "HLAS": "#003DA5",    # Blue
         "REP": "#000000",     # Black
@@ -1219,7 +1275,7 @@ def plot_trends(party_series: Dict[str, List[Tuple[datetime, float]]],
     ax2.set_title("Coalition Blocks - Poll Percentage", fontsize=14, fontweight='bold')
 
     government = {"SMER", "SNS", "HLAS", "REP"}
-    opposition = {"PS", "SAS", "DEM", "SLOV", "KDH"}
+    opposition = {"PS+DEM", "PS", "SAS", "DEM", "SLOV", "KDH"}
 
     # Calculate block totals per month
     all_dates = sorted(set(d for series in party_series.values() for d, _ in series))
@@ -1345,6 +1401,7 @@ def plot_kalman_trends(records: List[Dict],
     # Define party colors
     party_colors = {
         "PS": "#6B2D5C",
+        "PS+DEM": "#6B2D5C",
         "SMER": "#E31E24",
         "HLAS": "#003DA5",
         "REP": "#000000",
@@ -1375,7 +1432,7 @@ def plot_kalman_trends(records: List[Dict],
     ax1.axhline(y=5, color='gray', linestyle='--', alpha=0.5, label='5% threshold')
 
     government = {"SMER", "SNS", "HLAS", "REP"}
-    opposition = {"PS", "SAS", "DEM", "SLOV", "KDH"}
+    opposition = {"PS+DEM", "PS", "SAS", "DEM", "SLOV", "KDH"}
 
     for party, series in main_parties.items():
         dates = [d for d, _, _ in series]
